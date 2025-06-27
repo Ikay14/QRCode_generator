@@ -3,23 +3,22 @@ import { QRCodeGen } from 'src/utils/qr-generator';
 
 @Injectable()
 export class MoviesService {
-    constructor(private qrCode: QRCodeGen){}
+    constructor(private qrCode: QRCodeGen) {}
 
 
-async generateGroup(){
+generateGroup(){
     const group = this.qrCode.startAutoGeneration()
-    console.log(group);
-    
-    return group
-}    
+    if (!group) throw new NotFoundException('Failed to generate group');
+    return { msg: 'Group generated successfully, it refreshes after 10 sec' };
+}
 
-async getMoviesRecommendation(movieId: string):Promise<{msg: string, Data: any}>{
+    async getMoviesRecommendation(movieId: string): Promise<{ msg: string, Data: any }> {
 
-    const movies = this.qrCode.getMovieGroup(movieId)
+    const movies = await this.qrCode.getMovieGroup(movieId)
 
     if (!movies) throw new NotFoundException(`No movie found with id ${movieId}`)
         
-     return{ 
+     return { 
         msg: `movies returned successfully, not it refreshes after 10 sec`,
         Data: movies 
     }  

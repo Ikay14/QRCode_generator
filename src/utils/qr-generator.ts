@@ -25,17 +25,22 @@ export class QRCodeGen {
       }
       
 
-  async startAutoGeneration() {
-    setInterval(async () => {
-      const uuid = shortUUID.generate();
-      const indexes = this.getRandomIndexes(moviesJsonFile.length, 10);
-      const group = indexes.map(i => moviesJsonFile[i]);
-      this.moviesDB[uuid] = group;
+ async startAutoGeneration() {
+  setInterval(async () => {
+    const uuid = shortUUID.generate();
+    const indexes = this.getRandomIndexes(moviesJsonFile.length, 10);
+    const group = indexes.map(i => moviesJsonFile[i]);
 
-      const qrData = `${this.baseUrl}/${uuid}`;
-      this.latestQRCode = await QRCode.toDataURL(qrData);
-    }, 10000); 
-  }
+    this.moviesDB[uuid] = group;
+
+    const qrData = `${this.baseUrl}/${uuid}`;
+    this.latestQRCode = await QRCode.toDataURL(qrData);
+
+    console.log('Generated group UUID:', uuid);
+    console.log('Group movies:', group);
+  }, 10000);
+}
+
 
 
   getMovieGroup(uuid: string) {
